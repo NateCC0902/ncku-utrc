@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# 3D model build intermediates (regenerate with web/scripts/build-model.sh)
+web/build/
+
+# misc
+.DS_Store
+*.pem
+.env*
+!.env.example
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.vercel

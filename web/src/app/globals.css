@@ -1,0 +1,295 @@
+@import "tailwindcss";
+
+/* ============================================================
+   NCKU UTRC — "The Sounding"
+   Editorial-institution design tokens.
+   A marine-research journal: warm paper ground, cool prussian /
+   nautical-chart-blue ink, red vehicles carrying the colour.
+   The descent lives in the page's light-surface -> deep-ink arc,
+   not in glow or HUD chrome.
+   ============================================================ */
+
+@theme {
+  /* ---- Paper surfaces (warm) ---- */
+  --color-paper: #f4f1e8; /* page ground */
+  --color-paper-2: #ebe6d9; /* raised panel */
+  --color-paper-3: #e1dbc9; /* inset / deeper panel */
+  --color-ledger: #141d26; /* deep-ink colophon block (the seabed) */
+
+  /* ---- Ink (cool charcoal) ---- */
+  --color-ink: #18222c; /* primary text */
+  --color-ink-soft: #37434f; /* secondary text */
+  --color-ink-muted: #5e6a75; /* labels, captions */
+  --color-ink-faint: #8b95a0; /* faint / disabled */
+
+  /* ---- Hairlines (ink at low alpha) ---- */
+  --color-line: rgba(24, 34, 44, 0.14);
+  --color-line-strong: rgba(24, 34, 44, 0.3);
+
+  /* ---- Accent: prussian / nautical-chart blue ---- */
+  --color-tide: #1c3d5a;
+  --color-tide-deep: #14293c;
+  --color-tide-bright: #2f6b8f;
+
+  /* ---- Signal: NCKU crimson, used rarely (live marker, crest) ---- */
+  --color-signal: #a51f38;
+
+  /* ---- On-ledger (light ink used on the deep footer) ---- */
+  --color-paper-dim: rgba(244, 241, 232, 0.62);
+
+  /* ---- Type roles ---- */
+  --font-serif: var(--font-newsreader), var(--font-noto-serif-tc), Georgia,
+    "Times New Roman", "Songti TC", serif;
+  --font-sans: var(--font-noto-sans-tc), ui-sans-serif, system-ui, "PingFang TC",
+    "Microsoft JhengHei", sans-serif;
+  --font-mono: var(--font-jbmono), ui-monospace, "SFMono-Regular", monospace;
+
+  /* ---- Motion ---- */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --breakpoint-xs: 30rem;
+}
+
+/* ---------- base ---------- */
+/* Layered so border-color utilities (border-paper/60, border-line-strong, …)
+   can override this default; unlayered it would beat every utility. */
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-tide) 22%, transparent);
+  color: var(--color-ink);
+}
+
+/* ---------- focus & a11y ---------- */
+:focus-visible {
+  outline: 2px solid var(--color-tide-bright);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-paper);
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-ink) 22%, transparent);
+  border-radius: 999px;
+  border: 3px solid var(--color-paper);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--color-ink) 38%, transparent);
+}
+
+/* ============================================================
+   Utility classes
+   ============================================================ */
+
+/* Section kicker — small caps, tracked, quiet ink */
+.eyebrow {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--color-ink-muted);
+}
+
+/* Small marginal label — figure captions, data labels */
+.hud {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 600;
+  font-size: 0.64rem;
+  color: var(--color-ink-muted);
+}
+
+/* Tabular data / precise figures */
+.mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+/* Serif display numeral — big editorial figures */
+.figure {
+  font-family: var(--font-serif);
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "lnum" 1, "tnum" 1;
+  letter-spacing: -0.01em;
+}
+
+/* Panel — a quiet paper card. No blur, no glow. */
+.glass {
+  background: color-mix(in srgb, var(--color-paper-2) 94%, var(--color-paper));
+  border: 1px solid var(--color-line);
+}
+
+.glass-hover {
+  transition: border-color 0.3s var(--ease-out-soft),
+    transform 0.4s var(--ease-out-soft), box-shadow 0.4s var(--ease-out-soft);
+}
+.glass-hover:hover {
+  border-color: var(--color-line-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -22px color-mix(in srgb, var(--color-ink) 55%, transparent);
+}
+
+/* Hairline rule */
+.tick-rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--color-line-strong),
+    var(--color-line-strong) 88%,
+    transparent
+  );
+}
+
+/* Editorial label chip — hairline, small caps, on paper */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 2px;
+  padding: 0.26rem 0.62rem;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  color: var(--color-ink-soft);
+  background: color-mix(in srgb, var(--color-paper) 60%, transparent);
+}
+
+/* Accent emphasis for key phrases — colour, never glow */
+.text-glow {
+  color: var(--color-tide);
+}
+
+/* Section shell */
+.section {
+  position: relative;
+  padding-block: clamp(4rem, 8vw, 7.5rem);
+}
+.wrap {
+  width: 100%;
+  max-width: 74rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.15rem, 4vw, 2.75rem);
+}
+/* Reserve a slim left gutter on large screens for the sounding scale. */
+@media (min-width: 1024px) {
+  .wrap {
+    padding-left: 6rem;
+  }
+}
+@media (min-width: 1440px) {
+  .wrap {
+    padding-left: 7rem;
+  }
+}
+
+/* Graph-paper grid for schematic blocks — engineering, not neon */
+.blueprint {
+  background-image: linear-gradient(
+      to right,
+      var(--color-line) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+  -webkit-mask-image: radial-gradient(
+    ellipse 78% 78% at 50% 45%,
+    #000 55%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 78% 78% at 50% 45%,
+    #000 55%,
+    transparent 100%
+  );
+}
+
+/* Reveal-on-scroll base — subtle */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s var(--ease-out-soft),
+    transform 0.7s var(--ease-out-soft);
+  will-change: opacity, transform;
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Small down-cue bob */
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+.animate-bob {
+  animation: bob 2.6s ease-in-out infinite;
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
