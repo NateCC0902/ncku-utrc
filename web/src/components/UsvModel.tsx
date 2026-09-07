@@ -6,13 +6,9 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
-// These are fetched by three.js rather than resolved by Next, so they do not
-// pick up `basePath` on their own — a project site served under /<repo> would
-// look for them at the domain root and 404.
-const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-const MODEL_URL = `${BASE}/models/usv.glb`;
+const MODEL_URL = "/models/usv.glb";
 // Self-hosted so the viewer does not depend on Google's CDN at runtime.
-const DRACO_PATH = `${BASE}/draco/`;
+const DRACO_PATH = "/draco/";
 
 /**
  * The vessel, rendered live and turned by an external angle source.
